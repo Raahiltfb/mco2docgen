@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --brand-green: #07833F;
+    --brand-green-hover: #056631;
+    --brand-green-light: rgba(7, 131, 63, 0.08);
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+}
+
+/* Light mode panels & cards */
+.light-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+}
+
+.light-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease-in-out;
+}
+
+.light-card:hover:not(:disabled) {
+  border-color: #07833F;
+  box-shadow: 0 4px 12px -2px rgba(7, 131, 63, 0.12);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* A4 Document Preview Dimensions & Exact Print Simulation */
+.a4-page {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 18mm 20mm 20mm 20mm;
+  margin: 0 auto 2rem auto;
+  background: #ffffff;
+  color: #111827;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 11.5pt;
+  line-height: 1.55;
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .a4-page {
+    box-shadow: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    page-break-after: always;
+  }
+}
