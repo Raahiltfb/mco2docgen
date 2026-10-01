@@ -48,6 +48,7 @@ export interface WCRFormData {
   inverterType: string;
 
   // Section 4: String Configuration Details
+  includeTables?: boolean; // toggle to include/exclude DC string & AC measurement tables
   dcStringsCount: string; // numeric integer string, e.g. "8"
   stringInverterMake: string; // e.g. "Solis"
   stringInverterSize: string; // e.g. "110 kW"

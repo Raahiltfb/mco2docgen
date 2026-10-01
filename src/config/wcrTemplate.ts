@@ -15,8 +15,13 @@ export const WCR_FIXED_TEXT = {
     'System handover after successful testing',
   ],
 
-  stringConfigSentence: (numStrings: string, inverterMake: string, inverterSize: string) =>
-    `The solar PV array is configured into ${numStrings || '__'} DC strings connected to the ${inverterMake || 'Solis'} ${inverterSize || '110 kW'} inverter. String voltage and current readings were recorded during commissioning as detailed below:`,
+  stringConfigSentence: (numStrings: string, inverterMake: string, inverterSize: string, includeTables: boolean = true) => {
+    const baseSentence = `The solar PV array is configured into ${numStrings || '__'} DC strings connected to the ${inverterMake || 'Solis'} ${inverterSize || '110 kW'} inverter.`;
+    if (includeTables) {
+      return `${baseSentence} String voltage and current readings were recorded during commissioning as detailed below:`;
+    }
+    return baseSentence;
+  },
 };
 
 export const INITIAL_WCR_FORM_DATA: WCRFormData = {
@@ -42,6 +47,7 @@ export const INITIAL_WCR_FORM_DATA: WCRFormData = {
   inverterType: 'String Inverter',
 
   // Section 4: String Configuration
+  includeTables: true,
   dcStringsCount: '8',
   stringInverterMake: 'Solis',
   stringInverterSize: '110 kW',

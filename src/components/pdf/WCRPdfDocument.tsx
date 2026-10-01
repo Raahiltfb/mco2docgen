@@ -306,186 +306,179 @@ export const WCRPdfDocument: React.FC<WCRPdfDocumentProps> = ({ formData, logoUr
           {WCR_FIXED_TEXT.stringConfigSentence(
             formData.dcStringsCount,
             formData.stringInverterMake,
-            formData.stringInverterSize
+            formData.stringInverterSize,
+            formData.includeTables !== false
           )}
         </Text>
 
         {/* String Voltage and Current Table */}
-        <View style={styles.tableContainer}>
-          <Text style={styles.tableTitle}>String voltages and Current details</Text>
-          <View style={styles.tableHeader}>
-            <Text style={[styles.tableHeaderCell, { width: 45 }]}>String #</Text>
-            <Text style={[styles.tableHeaderCell, { flex: 1 }]}>MPPT NO</Text>
-            <Text style={[styles.tableHeaderCell, { flex: 1 }]}>Time</Text>
-            <Text style={[styles.tableHeaderCell, { flex: 1 }]}>No. of Modules</Text>
-            <Text style={[styles.tableHeaderCell, { flex: 1.2 }]}>String Voltage (V DC)</Text>
-            <Text style={[styles.tableHeaderCell, { flex: 1.2, borderRightWidth: 0 }]}>String Current (I DC)</Text>
-          </View>
-          {formData.stringRows && formData.stringRows.length > 0 ? (
-            formData.stringRows.map((row) => (
-              <View key={row.id} style={styles.tableRow}>
-                <Text style={[styles.tableCell, { width: 45, fontFamily: 'Helvetica-Bold' }]}>{row.stringNo}</Text>
-                <Text style={[styles.tableCell, { flex: 1 }]}>{row.mpptNo || '—'}</Text>
-                <Text style={[styles.tableCell, { flex: 1 }]}>{row.time || '—'}</Text>
-                <Text style={[styles.tableCell, { flex: 1 }]}>{row.noOfModules || '—'}</Text>
-                <Text style={[styles.tableCell, { flex: 1.2 }]}>{row.stringVoltage || '—'}</Text>
-                <Text style={[styles.tableCell, { flex: 1.2, borderRightWidth: 0 }]}>{row.stringCurrent || '—'}</Text>
-              </View>
-            ))
-          ) : null}
-        </View>
-
-        {/* AC Side Voltages & Currents */}
-        <Text style={styles.sectionHeading}>AC side Voltages and current</Text>
-        <View style={styles.twoColGrid}>
-          {/* Phase Voltages */}
-          <View style={styles.halfTable}>
+        {formData.includeTables !== false && (
+          <View style={styles.tableContainer}>
+            <Text style={styles.tableTitle}>String voltages and Current details</Text>
             <View style={styles.tableHeader}>
-              <Text style={[styles.tableHeaderCell, { width: 70 }]}>Phase</Text>
-              <Text style={[styles.tableHeaderCell, { flex: 1, borderRightWidth: 0 }]}>Voltages</Text>
+              <Text style={[styles.tableHeaderCell, { width: 45 }]}>String #</Text>
+              <Text style={[styles.tableHeaderCell, { flex: 1 }]}>MPPT NO</Text>
+              <Text style={[styles.tableHeaderCell, { flex: 1 }]}>Time</Text>
+              <Text style={[styles.tableHeaderCell, { flex: 1 }]}>No. of Modules</Text>
+              <Text style={[styles.tableHeaderCell, { flex: 1.2 }]}>String Voltage (V DC)</Text>
+              <Text style={[styles.tableHeaderCell, { flex: 1.2, borderRightWidth: 0 }]}>String Current (I DC)</Text>
             </View>
-            {voltageRows.map(({ key, label }) => (
-              <View key={key} style={styles.tableRow}>
-                <Text style={[styles.tableCell, { width: 70, fontFamily: 'Helvetica-Bold' }]}>{label}</Text>
-                <Text style={[styles.tableCell, { flex: 1, borderRightWidth: 0 }]}>
-                  {formData.phaseVoltages ? formData.phaseVoltages[key] || '' : ''}
-                </Text>
-              </View>
-            ))}
-          </View>
-
-          {/* Phase Current Part 1 */}
-          <View style={styles.halfTable}>
-            <View style={styles.tableHeader}>
-              <Text style={[styles.tableHeaderCell, { width: 70 }]}>Phase</Text>
-              <Text style={[styles.tableHeaderCell, { flex: 1, borderRightWidth: 0 }]}>Current</Text>
-            </View>
-            <View style={styles.tableRow}>
-              <Text style={[styles.tableCell, { width: 70, fontFamily: 'Helvetica-Bold' }]}>R phase</Text>
-              <Text style={[styles.tableCell, { flex: 1, borderRightWidth: 0 }]}>{formData.phaseCurrents?.rPhase || ''}</Text>
-            </View>
-            <View style={styles.tableRow}>
-              <Text style={[styles.tableCell, { width: 70, fontFamily: 'Helvetica-Bold' }]}>Y phase</Text>
-              <Text style={[styles.tableCell, { flex: 1, borderRightWidth: 0 }]}>{formData.phaseCurrents?.yPhase || ''}</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Fixed Footer */}
-        <View style={styles.footer} fixed>
-          <Text style={styles.footerTitle}>MINUS CO2 ENERGY PVT LTD.</Text>
-          <Text style={styles.footerText}>
-            Corporate Office: Hermes Atrium, Office No.309, Plot No.57, Sector 11, CBD Belapur, Navi Mumbai, Maharashtra - 400 614.
-          </Text>
-          <Text style={styles.footerText}>www.minusco2.in | info@minusco2.in | 022 4976 6944</Text>
-        </View>
-      </Page>
-
-      {/* PAGE 3 */}
-      <Page size="A4" style={styles.page}>
-        <View style={styles.headerRow}>
-          <View style={styles.greenBar} />
-          <Image src={resolvedLogoUrl} style={styles.logo} />
-        </View>
-
-        {/* Phase Current B phase continuation */}
-        <View style={[styles.halfTable, { marginBottom: 12 }]}>
-          <View style={styles.tableRow}>
-            <Text style={[styles.tableCell, { width: 70, fontFamily: 'Helvetica-Bold' }]}>B phase</Text>
-            <Text style={[styles.tableCell, { flex: 1, borderRightWidth: 0 }]}>{formData.phaseCurrents?.bPhase || ''}</Text>
-          </View>
-        </View>
-
-        {/* 5. Electrical Installation Details */}
-        <Text style={styles.sectionHeading}>5. Electrical Installation Details</Text>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• DC Cables:</Text>
-          <Text style={styles.bulletValue}>{formData.dcCables}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• AC Cables:</Text>
-          <Text style={styles.bulletValue}>{formData.acCables}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• DCDB Installed:</Text>
-          <Text style={styles.bulletValue}>{formData.dcdbInstalled}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• ACDB Installed:</Text>
-          <Text style={styles.bulletValue}>{formData.acdbInstalled}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• AC Isolator:</Text>
-          <Text style={styles.bulletValue}>{formData.acIsolator}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• Earthing System:</Text>
-          <Text style={styles.bulletValue}>{formData.earthingSystem}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• Lightning Arrester:</Text>
-          <Text style={styles.bulletValue}>{formData.lightningArrester}</Text>
-        </View>
-
-        {/* 6. Net Metering Status */}
-        <Text style={styles.sectionHeading}>6. Net Metering Status</Text>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• Net Meter Application:</Text>
-          <Text style={styles.bulletValue}>{formData.netMeterApp}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• Net Meter Installed:</Text>
-          <Text style={styles.bulletValue}>{formData.netMeterInstalled}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• Date of Synchronization:</Text>
-          <Text style={styles.bulletValue}>{formattedSyncDate || '_________________________'}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• DISCOM-</Text>
-          <Text style={styles.bulletValue}>{formData.discom}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• Meter Type-(Ratio)</Text>
-          <Text style={styles.bulletValue}>{formData.meterTypeRatio}</Text>
-        </View>
-        <View style={styles.bulletRow}>
-          <Text style={styles.bulletLabel}>• CT-(Ratio)</Text>
-          <Text style={styles.bulletValue}>{formData.ctRatio}</Text>
-        </View>
-
-        {/* 7. Client Remark */}
-        <Text style={styles.sectionHeading}>7. Client Remark</Text>
-        {formData.clientRemark ? (
-          <View style={styles.clientRemarkBox}>
-            <Text>{formData.clientRemark}</Text>
-          </View>
-        ) : (
-          <View style={{ marginBottom: 12 }}>
-            <View style={styles.dottedLine} />
-            <View style={styles.dottedLine} />
-            <View style={styles.dottedLine} />
-            <View style={styles.dottedLine} />
+            {formData.stringRows && formData.stringRows.length > 0 ? (
+              formData.stringRows.map((row) => (
+                <View key={row.id} style={styles.tableRow}>
+                  <Text style={[styles.tableCell, { width: 45, fontFamily: 'Helvetica-Bold' }]}>{row.stringNo}</Text>
+                  <Text style={[styles.tableCell, { flex: 1 }]}>{row.mpptNo || '—'}</Text>
+                  <Text style={[styles.tableCell, { flex: 1 }]}>{row.time || '—'}</Text>
+                  <Text style={[styles.tableCell, { flex: 1 }]}>{row.noOfModules || '—'}</Text>
+                  <Text style={[styles.tableCell, { flex: 1.2 }]}>{row.stringVoltage || '—'}</Text>
+                  <Text style={[styles.tableCell, { flex: 1.2, borderRightWidth: 0 }]}>{row.stringCurrent || '—'}</Text>
+                </View>
+              ))
+            ) : null}
           </View>
         )}
 
-        {/* Sign-off Area Headers */}
-        <View style={styles.signoffRow}>
-          <View style={styles.signoffCol}>
-            <Text style={{ fontFamily: 'Helvetica-Bold' }}>
-              Company name- {formData.companyName || 'MinusCO2 Energy Pvt.Ltd.'}
-            </Text>
-            <Text style={{ marginTop: 8 }}>Name- {formData.companySignatoryName || '…………………………………………'}</Text>
-            <Text style={{ marginTop: 8 }}>Designation- {formData.companySignatoryDesignation || '…………………………………………'}</Text>
-          </View>
-          <View style={styles.signoffCol}>
-            <Text style={{ fontFamily: 'Helvetica-Bold' }}>
-              Client- {formData.clientSignatoryName || formData.clientName}
-            </Text>
-            <Text style={{ marginTop: 8 }}>Name- {formData.clientSignatoryDesignation || '…………………………………………'}</Text>
-            <Text style={{ marginTop: 8 }}>Designation- ………………………………………………………………</Text>
-          </View>
-        </View>
+        {/* IF TABLES ARE INCLUDED: AC Side Voltages & Currents */}
+        {formData.includeTables !== false ? (
+          <>
+            <Text style={styles.sectionHeading}>AC side Voltages and current</Text>
+            <View style={styles.twoColGrid}>
+              {/* Phase Voltages */}
+              <View style={styles.halfTable}>
+                <View style={styles.tableHeader}>
+                  <Text style={[styles.tableHeaderCell, { width: 70 }]}>Phase</Text>
+                  <Text style={[styles.tableHeaderCell, { flex: 1, borderRightWidth: 0 }]}>Voltages</Text>
+                </View>
+                {voltageRows.map(({ key, label }) => (
+                  <View key={key} style={styles.tableRow}>
+                    <Text style={[styles.tableCell, { width: 70, fontFamily: 'Helvetica-Bold' }]}>{label}</Text>
+                    <Text style={[styles.tableCell, { flex: 1, borderRightWidth: 0 }]}>
+                      {formData.phaseVoltages ? formData.phaseVoltages[key] || '' : ''}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Phase Current Part 1 */}
+              <View style={styles.halfTable}>
+                <View style={styles.tableHeader}>
+                  <Text style={[styles.tableHeaderCell, { width: 70 }]}>Phase</Text>
+                  <Text style={[styles.tableHeaderCell, { flex: 1, borderRightWidth: 0 }]}>Current</Text>
+                </View>
+                <View style={styles.tableRow}>
+                  <Text style={[styles.tableCell, { width: 70, fontFamily: 'Helvetica-Bold' }]}>R phase</Text>
+                  <Text style={[styles.tableCell, { flex: 1, borderRightWidth: 0 }]}>{formData.phaseCurrents?.rPhase || ''}</Text>
+                </View>
+                <View style={styles.tableRow}>
+                  <Text style={[styles.tableCell, { width: 70, fontFamily: 'Helvetica-Bold' }]}>Y phase</Text>
+                  <Text style={[styles.tableCell, { flex: 1, borderRightWidth: 0 }]}>{formData.phaseCurrents?.yPhase || ''}</Text>
+                </View>
+              </View>
+            </View>
+          </>
+        ) : (
+          /* IF TABLES ARE OMITTED: Render Section 5, 6, 7 & Signatures on Page 2 */
+          <>
+            {/* 5. Electrical Installation Details */}
+            <Text style={styles.sectionHeading}>5. Electrical Installation Details</Text>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• DC Cables:</Text>
+              <Text style={styles.bulletValue}>{formData.dcCables}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• AC Cables:</Text>
+              <Text style={styles.bulletValue}>{formData.acCables}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• DCDB Installed:</Text>
+              <Text style={styles.bulletValue}>{formData.dcdbInstalled}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• ACDB Installed:</Text>
+              <Text style={styles.bulletValue}>{formData.acdbInstalled}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• AC Isolator:</Text>
+              <Text style={styles.bulletValue}>{formData.acIsolator}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Earthing System:</Text>
+              <Text style={styles.bulletValue}>{formData.earthingSystem}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Lightning Arrester:</Text>
+              <Text style={styles.bulletValue}>{formData.lightningArrester}</Text>
+            </View>
+
+            {/* 6. Net Metering Status */}
+            <Text style={styles.sectionHeading}>6. Net Metering Status</Text>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Net Meter Application:</Text>
+              <Text style={styles.bulletValue}>{formData.netMeterApp}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Net Meter Installed:</Text>
+              <Text style={styles.bulletValue}>{formData.netMeterInstalled}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Date of Synchronization:</Text>
+              <Text style={styles.bulletValue}>{formattedSyncDate || '_________________________'}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• DISCOM-</Text>
+              <Text style={styles.bulletValue}>{formData.discom}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Meter Type-(Ratio)</Text>
+              <Text style={styles.bulletValue}>{formData.meterTypeRatio}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• CT-(Ratio)</Text>
+              <Text style={styles.bulletValue}>{formData.ctRatio}</Text>
+            </View>
+
+            {/* 7. Client Remark */}
+            <Text style={styles.sectionHeading}>7. Client Remark</Text>
+            {formData.clientRemark ? (
+              <View style={styles.clientRemarkBox}>
+                <Text>{formData.clientRemark}</Text>
+              </View>
+            ) : (
+              <View style={{ marginBottom: 8 }}>
+                <View style={styles.dottedLine} />
+                <View style={styles.dottedLine} />
+                <View style={styles.dottedLine} />
+              </View>
+            )}
+
+            {/* Sign-off Area Headers & Signatures */}
+            <View style={[styles.signoffRow, { marginTop: 6 }]}>
+              <View style={styles.signoffCol}>
+                <Text style={{ fontFamily: 'Helvetica-Bold' }}>
+                  Company name- {formData.companyName || 'MinusCO2 Energy Pvt.Ltd.'}
+                </Text>
+                <Text style={{ marginTop: 4 }}>Name- {formData.companySignatoryName || '…………………………………………'}</Text>
+                <Text style={{ marginTop: 4 }}>Designation- {formData.companySignatoryDesignation || '…………………………………………'}</Text>
+              </View>
+              <View style={styles.signoffCol}>
+                <Text style={{ fontFamily: 'Helvetica-Bold' }}>
+                  Client- {formData.clientSignatoryName || formData.clientName}
+                </Text>
+                <Text style={{ marginTop: 4 }}>Name- {formData.clientSignatoryDesignation || '…………………………………………'}</Text>
+                <Text style={{ marginTop: 4 }}>Designation- ………………………………………………………………</Text>
+              </View>
+            </View>
+
+            <View style={[styles.signoffRow, { marginTop: 10 }]}>
+              <View style={styles.signoffCol}>
+                <Text style={{ fontFamily: 'Helvetica-Bold' }}>Signature-…………………………………………</Text>
+              </View>
+              <View style={styles.signoffCol}>
+                <Text style={{ fontFamily: 'Helvetica-Bold' }}>Signature-…………………………………………</Text>
+              </View>
+            </View>
+          </>
+        )}
 
         {/* Fixed Footer */}
         <View style={styles.footer} fixed>
@@ -497,32 +490,154 @@ export const WCRPdfDocument: React.FC<WCRPdfDocumentProps> = ({ formData, logoUr
         </View>
       </Page>
 
-      {/* PAGE 4 */}
-      <Page size="A4" style={styles.page}>
-        <View style={styles.headerRow}>
-          <View style={styles.greenBar} />
-          <Image src={resolvedLogoUrl} style={styles.logo} />
-        </View>
+      {/* PAGE 3 & 4 ONLY RENDERED WHEN TABLES ARE INCLUDED */}
+      {formData.includeTables !== false && (
+        <>
+          {/* PAGE 3 */}
+          <Page size="A4" style={styles.page}>
+            <View style={styles.headerRow}>
+              <View style={styles.greenBar} />
+              <Image src={resolvedLogoUrl} style={styles.logo} />
+            </View>
 
-        {/* Signatures Row */}
-        <View style={[styles.signoffRow, { marginTop: 24 }]}>
-          <View style={styles.signoffCol}>
-            <Text style={{ fontFamily: 'Helvetica-Bold' }}>Signature-…………………………………………</Text>
-          </View>
-          <View style={styles.signoffCol}>
-            <Text style={{ fontFamily: 'Helvetica-Bold' }}>Signature-…………………………………………</Text>
-          </View>
-        </View>
+            {/* Phase Current B phase continuation */}
+            <View style={[styles.halfTable, { marginBottom: 12 }]}>
+              <View style={styles.tableRow}>
+                <Text style={[styles.tableCell, { width: 70, fontFamily: 'Helvetica-Bold' }]}>B phase</Text>
+                <Text style={[styles.tableCell, { flex: 1, borderRightWidth: 0 }]}>{formData.phaseCurrents?.bPhase || ''}</Text>
+              </View>
+            </View>
 
-        {/* Fixed Footer */}
-        <View style={styles.footer} fixed>
-          <Text style={styles.footerTitle}>MINUS CO2 ENERGY PVT LTD.</Text>
-          <Text style={styles.footerText}>
-            Corporate Office: Hermes Atrium, Office No.309, Plot No.57, Sector 11, CBD Belapur, Navi Mumbai, Maharashtra - 400 614.
-          </Text>
-          <Text style={styles.footerText}>www.minusco2.in | info@minusco2.in | 022 4976 6944</Text>
-        </View>
-      </Page>
+            {/* 5. Electrical Installation Details */}
+            <Text style={styles.sectionHeading}>5. Electrical Installation Details</Text>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• DC Cables:</Text>
+              <Text style={styles.bulletValue}>{formData.dcCables}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• AC Cables:</Text>
+              <Text style={styles.bulletValue}>{formData.acCables}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• DCDB Installed:</Text>
+              <Text style={styles.bulletValue}>{formData.dcdbInstalled}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• ACDB Installed:</Text>
+              <Text style={styles.bulletValue}>{formData.acdbInstalled}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• AC Isolator:</Text>
+              <Text style={styles.bulletValue}>{formData.acIsolator}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Earthing System:</Text>
+              <Text style={styles.bulletValue}>{formData.earthingSystem}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Lightning Arrester:</Text>
+              <Text style={styles.bulletValue}>{formData.lightningArrester}</Text>
+            </View>
+
+            {/* 6. Net Metering Status */}
+            <Text style={styles.sectionHeading}>6. Net Metering Status</Text>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Net Meter Application:</Text>
+              <Text style={styles.bulletValue}>{formData.netMeterApp}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Net Meter Installed:</Text>
+              <Text style={styles.bulletValue}>{formData.netMeterInstalled}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Date of Synchronization:</Text>
+              <Text style={styles.bulletValue}>{formattedSyncDate || '_________________________'}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• DISCOM-</Text>
+              <Text style={styles.bulletValue}>{formData.discom}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• Meter Type-(Ratio)</Text>
+              <Text style={styles.bulletValue}>{formData.meterTypeRatio}</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <Text style={styles.bulletLabel}>• CT-(Ratio)</Text>
+              <Text style={styles.bulletValue}>{formData.ctRatio}</Text>
+            </View>
+
+            {/* 7. Client Remark */}
+            <Text style={styles.sectionHeading}>7. Client Remark</Text>
+            {formData.clientRemark ? (
+              <View style={styles.clientRemarkBox}>
+                <Text>{formData.clientRemark}</Text>
+              </View>
+            ) : (
+              <View style={{ marginBottom: 12 }}>
+                <View style={styles.dottedLine} />
+                <View style={styles.dottedLine} />
+                <View style={styles.dottedLine} />
+                <View style={styles.dottedLine} />
+              </View>
+            )}
+
+            {/* Sign-off Area Headers */}
+            <View style={styles.signoffRow}>
+              <View style={styles.signoffCol}>
+                <Text style={{ fontFamily: 'Helvetica-Bold' }}>
+                  Company name- {formData.companyName || 'MinusCO2 Energy Pvt.Ltd.'}
+                </Text>
+                <Text style={{ marginTop: 8 }}>Name- {formData.companySignatoryName || '…………………………………………'}</Text>
+                <Text style={{ marginTop: 8 }}>Designation- {formData.companySignatoryDesignation || '…………………………………………'}</Text>
+              </View>
+              <View style={styles.signoffCol}>
+                <Text style={{ fontFamily: 'Helvetica-Bold' }}>
+                  Client- {formData.clientSignatoryName || formData.clientName}
+                </Text>
+                <Text style={{ marginTop: 8 }}>Name- {formData.clientSignatoryDesignation || '…………………………………………'}</Text>
+                <Text style={{ marginTop: 8 }}>Designation- ………………………………………………………………</Text>
+              </View>
+            </View>
+
+            {/* Fixed Footer */}
+            <View style={styles.footer} fixed>
+              <Text style={styles.footerTitle}>MINUS CO2 ENERGY PVT LTD.</Text>
+              <Text style={styles.footerText}>
+                Corporate Office: Hermes Atrium, Office No.309, Plot No.57, Sector 11, CBD Belapur, Navi Mumbai, Maharashtra - 400 614.
+              </Text>
+              <Text style={styles.footerText}>www.minusco2.in | info@minusco2.in | 022 4976 6944</Text>
+            </View>
+          </Page>
+
+          {/* PAGE 4 */}
+          <Page size="A4" style={styles.page}>
+            <View style={styles.headerRow}>
+              <View style={styles.greenBar} />
+              <Image src={resolvedLogoUrl} style={styles.logo} />
+            </View>
+
+            {/* Signatures Row */}
+            <View style={[styles.signoffRow, { marginTop: 24 }]}>
+              <View style={styles.signoffCol}>
+                <Text style={{ fontFamily: 'Helvetica-Bold' }}>Signature-…………………………………………</Text>
+              </View>
+              <View style={styles.signoffCol}>
+                <Text style={{ fontFamily: 'Helvetica-Bold' }}>Signature-…………………………………………</Text>
+              </View>
+            </View>
+
+            {/* Fixed Footer */}
+            <View style={styles.footer} fixed>
+              <Text style={styles.footerTitle}>MINUS CO2 ENERGY PVT LTD.</Text>
+              <Text style={styles.footerText}>
+                Corporate Office: Hermes Atrium, Office No.309, Plot No.57, Sector 11, CBD Belapur, Navi Mumbai, Maharashtra - 400 614.
+              </Text>
+              <Text style={styles.footerText}>www.minusco2.in | info@minusco2.in | 022 4976 6944</Text>
+            </View>
+          </Page>
+        </>
+      )}
+
     </Document>
   );
 };

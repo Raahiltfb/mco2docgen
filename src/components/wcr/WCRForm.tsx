@@ -306,6 +306,30 @@ export const WCRForm: React.FC<WCRFormProps> = ({ formData, onChange, errors }) 
           <span>3. String Configuration & AC Measurements</span>
         </div>
 
+        {/* Toggle for Optional Tables */}
+        <div className="p-4 rounded-lg bg-emerald-50/60 border border-emerald-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <label htmlFor="includeTablesToggle" className="text-xs font-bold text-slate-800 flex items-center space-x-2 cursor-pointer">
+              <input
+                id="includeTablesToggle"
+                type="checkbox"
+                checked={formData.includeTables !== false}
+                onChange={(e) => handleInputChange('includeTables', e.target.checked)}
+                className="w-4 h-4 text-[#07833F] rounded border-slate-300 focus:ring-[#07833F] cursor-pointer"
+              />
+              <span>Include Commissioning Reading Tables (DC Strings & AC Side Readings)</span>
+            </label>
+            <p className="text-[11px] text-slate-600 mt-1 pl-6">
+              When checked, DC String Voltage/Current table and AC Voltages & Currents table will be included in the report along with the text: 
+              <em className="text-slate-700 font-medium"> "String voltage and current readings were recorded during commissioning as detailed below:"</em>.
+              Uncheck to omit tables for reports that do not require them.
+            </p>
+          </div>
+          <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap ${formData.includeTables !== false ? 'bg-emerald-100 text-[#07833F]' : 'bg-slate-200 text-slate-600'}`}>
+            {formData.includeTables !== false ? 'Tables Included' : 'Tables Omitted'}
+          </span>
+        </div>
+
         {/* Dynamic String Intro Inputs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -351,72 +375,80 @@ export const WCRForm: React.FC<WCRFormProps> = ({ formData, onChange, errors }) 
           </div>
         </div>
 
-        {/* Dynamic String Measurement Table Component */}
-        <StringTableSection
-          dcStringsCount={formData.dcStringsCount}
-          onDcStringsCountChange={(cnt) => handleInputChange('dcStringsCount', cnt)}
-          rows={formData.stringRows}
-          onRowsChange={(rows) => handleInputChange('stringRows', rows)}
-        />
+        {formData.includeTables !== false ? (
+          <>
+            {/* Dynamic String Measurement Table Component */}
+            <StringTableSection
+              dcStringsCount={formData.dcStringsCount}
+              onDcStringsCountChange={(cnt) => handleInputChange('dcStringsCount', cnt)}
+              rows={formData.stringRows}
+              onRowsChange={(rows) => handleInputChange('stringRows', rows)}
+            />
 
-        {/* AC side Voltages and Current Tables */}
-        <div className="pt-4 border-t border-slate-200 space-y-4">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-[#07833F]">
-            AC Side Voltages & Currents
-          </h4>
+            {/* AC side Voltages and Current Tables */}
+            <div className="pt-4 border-t border-slate-200 space-y-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-[#07833F]">
+                AC Side Voltages & Currents
+              </h4>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Phase Voltages */}
-            <div className="border border-slate-200 rounded-lg p-4 bg-slate-50 space-y-2">
-              <span className="text-xs font-bold text-slate-800">Phase Voltages (V AC)</span>
-              <div className="space-y-1.5 pt-2">
-                {[
-                  { key: 'ry', label: 'R-Y' },
-                  { key: 'yb', label: 'Y-B' },
-                  { key: 'br', label: 'B-R' },
-                  { key: 'rpn', label: 'R-P-N' },
-                  { key: 'ypn', label: 'Y-P-N' },
-                  { key: 'bpn', label: 'B-P-N' },
-                  { key: 'pe', label: 'P-E' },
-                ].map(({ key, label }) => (
-                  <div key={key} className="flex items-center justify-between gap-3 text-xs">
-                    <span className="font-semibold text-slate-700 w-20">{label}:</span>
-                    <input
-                      type="text"
-                      value={(formData.phaseVoltages as any)[key] || ''}
-                      onChange={(e) => handleNestedChange('phaseVoltages', key, e.target.value)}
-                      placeholder="Voltage reading"
-                      className="flex-1 px-2.5 py-1 bg-white border border-slate-300 rounded text-xs text-slate-900 focus:outline-none focus:border-[#07833F]"
-                    />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Phase Voltages */}
+                <div className="border border-slate-200 rounded-lg p-4 bg-slate-50 space-y-2">
+                  <span className="text-xs font-bold text-slate-800">Phase Voltages (V AC)</span>
+                  <div className="space-y-1.5 pt-2">
+                    {[
+                      { key: 'ry', label: 'R-Y' },
+                      { key: 'yb', label: 'Y-B' },
+                      { key: 'br', label: 'B-R' },
+                      { key: 'rpn', label: 'R-P-N' },
+                      { key: 'ypn', label: 'Y-P-N' },
+                      { key: 'bpn', label: 'B-P-N' },
+                      { key: 'pe', label: 'P-E' },
+                    ].map(({ key, label }) => (
+                      <div key={key} className="flex items-center justify-between gap-3 text-xs">
+                        <span className="font-semibold text-slate-700 w-20">{label}:</span>
+                        <input
+                          type="text"
+                          value={(formData.phaseVoltages as any)[key] || ''}
+                          onChange={(e) => handleNestedChange('phaseVoltages', key, e.target.value)}
+                          placeholder="Voltage reading"
+                          className="flex-1 px-2.5 py-1 bg-white border border-slate-300 rounded text-xs text-slate-900 focus:outline-none focus:border-[#07833F]"
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+
+                {/* Phase Currents */}
+                <div className="border border-slate-200 rounded-lg p-4 bg-slate-50 space-y-2">
+                  <span className="text-xs font-bold text-slate-800">Phase Currents (I AC)</span>
+                  <div className="space-y-2 pt-2">
+                    {[
+                      { key: 'rPhase', label: 'R phase' },
+                      { key: 'yPhase', label: 'Y phase' },
+                      { key: 'bPhase', label: 'B phase' },
+                    ].map(({ key, label }) => (
+                      <div key={key} className="flex items-center justify-between gap-3 text-xs">
+                        <span className="font-semibold text-slate-700 w-20">{label}:</span>
+                        <input
+                          type="text"
+                          value={(formData.phaseCurrents as any)[key] || ''}
+                          onChange={(e) => handleNestedChange('phaseCurrents', key, e.target.value)}
+                          placeholder="Current reading"
+                          className="flex-1 px-2.5 py-1 bg-white border border-slate-300 rounded text-xs text-slate-900 focus:outline-none focus:border-[#07833F]"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* Phase Currents */}
-            <div className="border border-slate-200 rounded-lg p-4 bg-slate-50 space-y-2">
-              <span className="text-xs font-bold text-slate-800">Phase Currents (I AC)</span>
-              <div className="space-y-2 pt-2">
-                {[
-                  { key: 'rPhase', label: 'R phase' },
-                  { key: 'yPhase', label: 'Y phase' },
-                  { key: 'bPhase', label: 'B phase' },
-                ].map(({ key, label }) => (
-                  <div key={key} className="flex items-center justify-between gap-3 text-xs">
-                    <span className="font-semibold text-slate-700 w-20">{label}:</span>
-                    <input
-                      type="text"
-                      value={(formData.phaseCurrents as any)[key] || ''}
-                      onChange={(e) => handleNestedChange('phaseCurrents', key, e.target.value)}
-                      placeholder="Current reading"
-                      className="flex-1 px-2.5 py-1 bg-white border border-slate-300 rounded text-xs text-slate-900 focus:outline-none focus:border-[#07833F]"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+          </>
+        ) : (
+          <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 text-center text-xs text-slate-500 italic">
+            Commissioning tables (DC Strings & AC Side Measurements) are currently omitted from the document report. The section heading "4. String Configuration Details" and configuration text remain.
           </div>
-        </div>
+        )}
       </div>
 
       {/* SECTION 5: Electrical Installation Details */}
